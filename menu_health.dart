@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smarttracking/menu.dart';
+import 'healthSave.dart';
 
 class MenuHealthPage extends StatelessWidget {
   @override
@@ -49,6 +50,21 @@ class MenuHealthPage extends StatelessWidget {
                 // Handle Sleep button tap
                 Navigator.pushNamed(context, '/sleep');
               },
+            ),
+            SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: () {
+                // Navigate to HealthSavePage when the button is pressed
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HealthSavePage()),
+                );
+              },
+              child: Text('ไปหน้า Health Save'),
+              style: ElevatedButton.styleFrom(
+                fixedSize: Size(200, 50),
+                primary: Colors.orange,
+              ),
             ),
           ],
         ),
