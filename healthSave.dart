@@ -62,7 +62,7 @@ class _HealthSavePageState extends State<HealthSavePage> {
                 await _saveHealthData();
                 Navigator.pop(context);
               },
-              child: Text('Save Health Data'),
+              child: Text('บันทึกข้อมูล'),
               style: ElevatedButton.styleFrom(
                 fixedSize: Size(200, 50),
                 primary: Colors.orange,
