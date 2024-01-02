@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smarttracking/menu.dart';
+import 'package:http/http.dart' as http;
 
 class settingPage extends StatefulWidget {
   @override
@@ -7,34 +7,40 @@ class settingPage extends StatefulWidget {
 }
 
 class _settingPageState extends State<settingPage> {
-  TextEditingController imeiController = TextEditingController();
-  TextEditingController deviceNameController = TextEditingController();
+  TextEditingController _imeiController = TextEditingController();
+  TextEditingController _deviceNameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Setting'),
+        title: Text('Settings'),
         backgroundColor: Color.fromARGB(255, 254, 123, 1),
       ),
       backgroundColor: const Color.fromARGB(255, 49, 83, 99),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _buildInputField('IMEI Number', imeiController),
-            _buildInputField('Device Name', deviceNameController),
+          children: <Widget>[
+            TextFormField(
+              controller: _imeiController,
+              decoration: InputDecoration(labelText: 'IMEI Number'),
+            ),
+            SizedBox(height: 8.0),
+            TextFormField(
+              controller: _deviceNameController,
+              decoration: InputDecoration(labelText: 'Device Name'),
+            ),
             SizedBox(height: 16.0),
             ElevatedButton(
-              onPressed: saveSettings,
+              onPressed: () async {
+                await _updateSettings();
+              },
+              child: Text('บันทึกการตั้งค่า'),
               style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 16.0),
-                backgroundColor: Color.fromARGB(255, 254, 123, 1),
-              ),
-              child: Text(
-                'Save',
-                style: TextStyle(fontSize: 16.0),
+                fixedSize: Size(200, 50),
+                primary: Colors.orange,
               ),
             ),
           ],
@@ -43,47 +49,32 @@ class _settingPageState extends State<settingPage> {
     );
   }
 
-  Widget _buildInputField(String labelText, TextEditingController controller) {
-    return TextFormField(
-      controller: controller,
-      style: TextStyle(color: Colors.white),
-      decoration: InputDecoration(
-        labelText: labelText,
-        labelStyle: TextStyle(color: Colors.white),
-        contentPadding: EdgeInsets.symmetric(vertical: 8.0),
-      ),
-    );
+  Future<void> _updateSettings() async {
+    final apiUrl = 'http://localhost/api_tracking/setting.php';
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        body: {
+          'imei_no': _imeiController.text,
+          'device_name': _deviceNameController.text,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        _showSnackBar('Settings updated successfully');
+      } else {
+        _showSnackBar('Failed to update settings');
+      }
+    } catch (e) {
+      print('Error: $e');
+      _showSnackBar('Error occurred while updating settings');
+    }
   }
 
-  void saveSettings() {
-    String imeiNumber = imeiController.text;
-    String deviceName = deviceNameController.text;
-    String apiUrl = 'http://localhost/api_tracking/setting.php';
-
-    // Perform the logic to save the settings
-    // You can add your implementation here
-
-    // Show a success message or navigate to another screen
-    showSuccessDialog(context);
-  }
-
-  void showSuccessDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Successfully'),
-          content: Text('Your settings have been successfully saved.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('บันทึกข้อมูล'),
-            ),
-          ],
-        );
-      },
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
     );
   }
 }
