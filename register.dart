@@ -26,7 +26,7 @@ class _RegisterUserFormState extends State<RegisterUserForm> {
     String email = emailController.text;
     String password = passwordController.text;
 
-    String apiUrl = 'http://localhost/smarttracking/saveregister.php';
+    String apiUrl = 'http://localhost/api_tracking/saveregister.php';
 
     Map<String, dynamic> requestBody = {
       'firstname': firstName,
