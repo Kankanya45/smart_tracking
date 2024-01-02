@@ -64,17 +64,6 @@ class MyMenuPage extends StatelessWidget {
                 SizedBox(height: 16),
                 MenuButton(
                   icon: Icons.local_hospital,
-                  label: 'Health Save',
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => HealthSavePage()),
-                    );
-                  },
-                ),
-                SizedBox(height: 16),
-                MenuButton(
-                  icon: Icons.local_hospital,
                   label: 'Menu Health',
                   onPressed: () {
                     Navigator.push(
